@@ -1,13 +1,9 @@
 module Rows where
 
 import Sets
-import Data.List (find, nub)
 
 type Row    = [PitchClass]
 type Matrix = [Row]
-
-constructRow :: [PitchClass] -> Row
-constructRow = nub . map (`mod` 12)
 
 rowMatrix :: Row -> Matrix
 rowMatrix r = [transposeSet i r' | i <- inverse r']
