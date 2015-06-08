@@ -30,8 +30,8 @@ reduce f _          = []
 complement :: PitchClass -> PitchClass
 complement = (`mod` 12) . negate
 
-transpose :: PitchClass -> Interval -> PitchClass
-transpose p n = (p + n) `mod` 12
+transpose :: Interval -> PitchClass -> PitchClass
+transpose n = (`mod` 12) . (+ n)
 
 normalize :: PitchClass -> PitchClass
 normalize p = if p <= 6 then p else complement p
@@ -41,15 +41,15 @@ normalize p = if p <= 6 then p else complement p
 inverse :: [PitchClass] -> [PitchClass]
 inverse = map complement
 
-transposeSet :: [PitchClass] -> Interval -> [PitchClass]
-transposeSet s n = map (`transpose` n) s
+transposeSet :: Interval -> [PitchClass] -> [PitchClass]
+transposeSet n = map (`transpose` n)
 
-transposeInverse :: [PitchClass] -> Interval -> [PitchClass]
-transposeInverse s n = transposeSet (inverse s) n
+transposeInverse :: Interval -> [PitchClass] -> [PitchClass]
+transposeInverse n = transposeSet n . inverse
 
 zero :: [PitchClass] -> [PitchClass]
 zero [] = []
-zero s@(a:_) = transposeSet s (opci a 0)
+zero s@(a:_) = transposeSet (opci a 0) s
 
 normalForm :: [PitchClass] -> [PitchClass]
 normalForm = minimumBy compareSets . cycles . sort
